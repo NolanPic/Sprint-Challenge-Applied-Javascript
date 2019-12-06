@@ -29,13 +29,54 @@ const state = {
 }
 
 function Carousel(images) {
+
+  const slideCarousel = function(right) {
+    let newIndex = state.currentIndex;
+    if(right) {
+      // user clicked right
+      if(state.currentIndex === images.length -1) {
+        // user is at end of carousel--loop back
+        newIndex = 0;
+      }
+      else {
+        // user is not at end of carousel--increment index
+        newIndex = state.currentIndex + 1;
+      }
+    }
+    else{
+      // user clicked left
+      if(state.currentIndex === 0) {
+        // user is at the beginnning of carousel--loop to end
+        newIndex = images.length - 1;
+      }
+      else {
+        // user is not at beginning of carousel--decrement index
+        newIndex = state.currentIndex - 1;
+      }
+    }
+
+    // update dom to display correct slide based on index
+    const slides = document.querySelectorAll('.carousel img');
+
+    // first, display:none all of them
+    slides.forEach(slide => (slide.style.display = 'none'));
+
+    // second, display the image at the correct index
+    const slideToShow = document.querySelector(`.carousel img:nth-of-type(${newIndex + 1})`);
+    slideToShow.style.display = 'block';
+
+    state.currentIndex = newIndex;
+  }
+
   // carousel parent element
   const carousel = document.createElement('div');
   carousel.classList.add('carousel');
   
   // left-button
   const leftButton = document.createElement('div');
+  leftButton.classList.add('left-button');
   leftButton.textContent = ' < ';
+  leftButton.addEventListener('click', () => slideCarousel(false));
   carousel.appendChild(leftButton);
 
   // images
@@ -52,7 +93,9 @@ function Carousel(images) {
 
   // right-button
   const rightButton = document.createElement('div');
+  rightButton.classList.add('right-button');
   rightButton.textContent = ' > ';
+  rightButton.addEventListener('click', () => slideCarousel(true));
   carousel.appendChild(rightButton);
 
   return carousel;

@@ -22,6 +22,7 @@ function Card(item) {
     // card parent element
     const card = document.createElement('div');
     card.classList.add('card');
+    card.setAttribute('data-category', item.category);
 
     // headline
     const headline = document.createElement('div');

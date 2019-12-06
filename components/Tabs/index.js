@@ -20,11 +20,31 @@ axios.get('https://lambda-times-backend.herokuapp.com/topics')
     })
     .catch(err => console.warn(err));
 
+function filterCardsByTab(tab) {
+    if(tab === 'node.js') {
+        tab = 'node'; // has to be corrected to this
+    }
+
+    document.querySelectorAll('.cards-container .card')
+        .forEach(card => {
+            if(card.getAttribute('data-category') === tab || tab === 'All') {
+                // these are the cards we want to show
+                card.style.display = 'block';
+            }
+            else {
+                // these are the cards we want to hide
+                card.style.display = 'none';
+            }
+        });
+}
+
 // single tab
 function Tab(name) {
     const tab = document.createElement('div');
     tab.classList.add('tab');
     tab.textContent = name;
+
+    tab.addEventListener('click', () => filterCardsByTab(name));
 
     return tab;
 }
@@ -35,5 +55,6 @@ function TabList(names) {
         return null;
     } 
 
-    return names.map(name => Tab(name));
+    // returns the list of tabs from the server as well as an 'All' tab
+    return  [ Tab('All'), ...names.map(name => Tab(name)) ];
 }
